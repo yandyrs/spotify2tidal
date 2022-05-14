@@ -2,6 +2,8 @@ import logging
 import requests
 import tidalapi
 
+from tidalapi import Config
+
 
 class Tidal:
     """Provide a search-based adding of new favorites to Tidal.
@@ -16,8 +18,8 @@ class Tidal:
     password: str
         Tidal password
     """
-    def __init__(self, username, password):
-        self.tidal_session = self._connect(username, password)
+    def __init__(self, username, password, **kwargs):
+        self.tidal_session = self._connect(username, password, **kwargs)
 
     @property
     def own_playlists(self):
@@ -168,7 +170,7 @@ class Tidal:
 
         return r.json()["uuid"]
 
-    def _connect(self, username, password):
+    def _connect(self, username, password, config = Config()):
         """Connect to tidal and return a session object.
 
         Parameters
@@ -178,8 +180,9 @@ class Tidal:
         password: str
             Tidal password
         """
-        tidal_session = tidalapi.Session()
-        tidal_session.login(username, password)
+        tidal_session = tidalapi.Session(config)
+        # tidal_session.login(username, password)
+        tidal_session.login_oauth_simple()
         return tidal_session
 
     def _delete_playlist(self, playlist_id):

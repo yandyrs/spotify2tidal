@@ -46,12 +46,16 @@ class Spotify:
             result = self.spotify_session.current_user_playlists()
             playlists = result["items"]
 
-            while result["next"]:
-                result = self.spotify_sesion.next(result)
-                playlists.extend(result["items"])
-        except spotipy.client.SpotifyException:
-            self._refresh_expired_token()
-            return self.own_playlists
+        except:
+            pass
+
+        # TODO: fix paging
+        #     while result["next"]:
+        #         result = self.spotify_sesion.next(result)
+        #         playlists.extend(result["items"])
+        # except spotipy.client.SpotifyException:
+        #     self._refresh_expired_token()
+        
 
         return playlists
 
